@@ -1,0 +1,28 @@
+/* src/styles/global.css */
+html,
+body {
+  scroll-behavior: smooth;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex; /* Use flexbox for modern centering */
+  flex-direction: column;
+  justify-content: center; /* Vertically centers content */
+  align-items: center; /* Horizontally centers content */
+  min-height: 100vh; /* Ensures body takes full viewport height */
+  padding: 20px;
+  box-sizing: border-box; /* Includes padding in the total width/height */
+  font-family: "JetBrains Mono", monospace;
+  font-size: 20px;
+  line-height: 1.8;
+  color: #194b3f;
+  background-image: url("/img/bg.svg");
+}
+
+a {
+  color: #2274a5;
+  word-wrap: break-word;
+}

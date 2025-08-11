@@ -1,0 +1,64 @@
+---
+// src/components/LinkList.astro
+interface Link {
+  href: string;
+  name: string;
+  iconClass: string; // Changed from 'svg' to 'iconClass'
+}
+interface Props {
+  links: Link[];
+}
+const { links } = Astro.props;
+---
+<ul class="links">
+  {links.map((link) => (
+    <li>
+      <a href={link.href} target="_blank" rel="noopener noreferrer">
+        <i class:list={[link.iconClass, "fa-fw"]}></i> {/* Use an <i> tag for the icon */}
+        {link.name}
+      </a>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .links {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+    max-width: 500px;
+    padding: 0 20px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+  .links li a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(221, 255, 244, 0.7);
+    color: #194b3f;
+    text-decoration: none;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border: 2px dashed rgba(226, 133, 184, 0.7);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+  }
+  .links li a:hover {
+    transform: scale(1.05);
+    background-color: rgba(217, 161, 192, 0.7);
+    color: #594157;
+  }
+  /* Style for the Font Awesome icon */
+  .links li a i {
+    color: #194b3f; /* Base icon color */
+    font-size: 1.25rem; /* Adjust icon size */
+    margin-right: 10px;
+    transition: color 0.2s ease-in-out;
+  }
+  /* Change icon color on link hover */
+  .links li a:hover i {
+    color: #594157;
+  }
+</style>

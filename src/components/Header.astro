@@ -1,0 +1,28 @@
+---
+// src/components/Header.astro
+interface Props {
+    title: string;
+}
+const { title } = Astro.props;
+---
+<h1>{title}</h1>
+
+<style>
+  h1 {
+    font-weight: 100;
+    font-size: 2.5rem;
+    text-align: center;
+    padding: 10px 20px; /* Added horizontal padding */
+    margin: 0 15px 25px;
+    background-color: rgba(217, 161, 192, 0.7);
+    color: #594157;
+    white-space: nowrap; /* Prevents the text from breaking into a new line */
+  }
+
+  /* Responsive adjustment for mobile */
+  @media (max-width: 600px) {
+    h1 {
+      font-size: 1.8rem; /* Further reduce font size on small screens */
+    }
+  }
+</style>

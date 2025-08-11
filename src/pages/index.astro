@@ -1,0 +1,42 @@
+---
+// src/pages/index.astro
+import Layout from '../components/Layout.astro';
+import Header from '../components/Header.astro';
+import LinkList from '../components/LinkList.astro';
+
+const pageTitle = "Hi, I'm Stefan";
+
+// Define the array of link data with Font Awesome classes
+const socialLinks = [
+  {
+    href: 'https://stefanyas.t.me',
+    name: 'Telegram',
+    iconClass: 'fa-brands fa-telegram'
+  },
+  {
+    href: 'https://github.com/stefan-yas',
+    name: 'GitHub',
+    iconClass: 'fa-brands fa-github'
+  },
+  {
+    href: 'mailto:stefan@stefanyas.me',
+    name: 'Email',
+    iconClass: 'fa-solid fa-envelope'
+  },
+  {
+    href: 'https://matrix.to/#/@stefan_yas:matrix.org',
+    name: 'Matrix',
+    iconClass: 'fa-solid fa-comments' // Note: This is a custom alias, may not exist in FA
+  },
+  {
+    href: 'https://mastodon.social/@stefanyas',
+    name: 'Mastodon',
+    iconClass: 'fa-brands fa-mastodon'
+  }
+];
+---
+<Layout title={pageTitle}>
+    <Header title={pageTitle} />
+    
+    <LinkList links={socialLinks} />
+</Layout>
