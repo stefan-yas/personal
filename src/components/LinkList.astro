@@ -3,7 +3,7 @@
 interface Link {
   href: string;
   name: string;
-  iconClass: string; // Changed from 'svg' to 'iconClass'
+  iconClass: string;
 }
 interface Props {
   links: Link[];
@@ -14,7 +14,7 @@ const { links } = Astro.props;
   {links.map((link) => (
     <li>
       <a href={link.href} target="_blank" rel="noopener noreferrer">
-        <i class:list={[link.iconClass, "fa-fw"]}></i> {/* Use an <i> tag for the icon */}
+        <i class:list={[link.iconClass, "fa-fw"]}></i>
         {link.name}
       </a>
     </li>
@@ -25,10 +25,6 @@ const { links } = Astro.props;
   .links {
     list-style: none;
     padding: 0;
-    width: 100%;
-    max-width: 500px;
-    padding: 0 20px;
-    box-sizing: border-box;
     text-align: center;
   }
   .links li a {
@@ -52,8 +48,8 @@ const { links } = Astro.props;
   }
   /* Style for the Font Awesome icon */
   .links li a i {
-    color: #194b3f; /* Base icon color */
-    font-size: 1.25rem; /* Adjust icon size */
+    color: #194b3f;
+    font-size: 1.25rem;
     margin-right: 10px;
     transition: color 0.2s ease-in-out;
   }

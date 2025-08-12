@@ -5,8 +5,6 @@ import Header from '../components/Header.astro';
 import LinkList from '../components/LinkList.astro';
 
 const pageTitle = "Hi, I'm Stefan";
-
-// Define the array of link data with Font Awesome classes
 const socialLinks = [
   {
     href: 'https://stefanyas.t.me',
@@ -26,7 +24,7 @@ const socialLinks = [
   {
     href: 'https://matrix.to/#/@stefan_yas:matrix.org',
     name: 'Matrix',
-    iconClass: 'fa-solid fa-comments' // Note: This is a custom alias, may not exist in FA
+    iconClass: 'fa-solid fa-comments'
   },
   {
     href: 'https://mastodon.social/@stefanyas',
@@ -36,7 +34,18 @@ const socialLinks = [
 ];
 ---
 <Layout title={pageTitle}>
-    <Header title={pageTitle} />
-    
-    <LinkList links={socialLinks} />
+    <main class="container">
+        <Header title={pageTitle} />
+        <LinkList links={socialLinks} />
+    </main>
 </Layout>
+
+<style>
+  .container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+</style>
