@@ -1,0 +1,55 @@
+---
+// src/components/NavArrows.astro
+interface Props {
+  prevUrl?: string;
+  nextUrl?: string;
+}
+
+const { prevUrl, nextUrl } = Astro.props;
+---
+
+<div class="nav-arrows">
+  {prevUrl ? (
+    <a href={prevUrl} class="arrow prev" aria-label="Previous Page">
+      <i class="fas fa-chevron-left"></i>
+    </a>
+  ) : <div />}
+
+  {nextUrl ? (
+    <a href={nextUrl} class="arrow next" aria-label="Next Page">
+      <i class="fas fa-chevron-right"></i>
+    </a>
+  ) : <div />}
+</div>
+
+<style>
+  .nav-arrows {
+    position: fixed;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 100;
+  }
+  .arrow {
+    pointer-events: all;
+    color: #194b3f;
+    font-size: 2rem;
+    padding: 1rem;
+    text-decoration: none;
+    transition: transform 0.2s ease-in-out;
+  }
+  .arrow:hover {
+    transform: scale(1.2);
+    color: #594157;
+  }
+  /* The padding-right/left gives it some space from the edge */
+  .prev {
+    padding-left: 20px;
+  }
+  .next {
+    padding-right: 20px;
+  }
+</style>

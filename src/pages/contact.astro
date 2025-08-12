@@ -1,0 +1,21 @@
+---
+// src/pages/contact.astro
+import SwipeLayout from '../components/SwipeLayout.astro';
+---
+<SwipeLayout title="Contact" prevUrl="/about">
+  <main class="container" transition:animate="slide">
+    <h1>Contact</h1>
+    <p>This is a placeholder page for the contact section.</p>
+  </main>
+</SwipeLayout>
+
+<style>
+  .container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+</style>

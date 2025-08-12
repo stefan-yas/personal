@@ -1,6 +1,6 @@
 ---
 // src/pages/index.astro
-import Layout from '../components/Layout.astro';
+import SwipeLayout from '../components/SwipeLayout.astro';
 import Header from '../components/Header.astro';
 import LinkList from '../components/LinkList.astro';
 
@@ -29,16 +29,17 @@ const socialLinks = [
   {
     href: 'https://mastodon.social/@stefanyas',
     name: 'Mastodon',
-    iconClass: 'fa-brands fa-mastodon'
+    iconClass: 
+'fa-brands fa-mastodon'
   }
 ];
 ---
-<Layout title={pageTitle}>
-    <main class="container">
+<SwipeLayout title={pageTitle} nextUrl="/about">
+    <main class="container" transition:animate="slide">
         <Header title={pageTitle} />
         <LinkList links={socialLinks} />
     </main>
-</Layout>
+</SwipeLayout>
 
 <style>
   .container {

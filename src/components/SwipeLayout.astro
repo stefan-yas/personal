@@ -1,0 +1,87 @@
+---
+// src/components/SwipeLayout.astro
+import { ClientRouter } from 'astro:transitions';
+import NavArrows from './NavArrows.astro';
+import '../styles/global.css';
+
+interface Props {
+	title: string;
+  prevUrl?: string;
+  nextUrl?: string;
+}
+
+const { title, prevUrl, nextUrl } = Astro.props;
+---
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+
+		{/* Favicon links etc. */}
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+		{/* Scripts and Fonts */}
+		<script data-goatcounter="https://stefanyas.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..800&display=swap" rel="stylesheet">
+
+		<ClientRouter />
+	</head>
+	<body>
+    <NavArrows prevUrl={prevUrl} nextUrl={nextUrl} />
+		<slot />
+	</body>
+</html>
+<script is:inline>
+  // --- KEYBOARD NAVIGATION ---
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') {
+      const prev = document.querySelector('.arrow.prev');
+      if (prev) window.location.href = prev.href;
+    } else if (e.key === 'ArrowRight') {
+      const next = document.querySelector('.arrow.next');
+      if (next) window.location.href = next.href;
+    }
+  });
+
+  // --- SWIPE NAVIGATION ---
+  let touchstartX = 0;
+  let touchendX = 0;
+  const swipeThreshold = 50; // Minimum distance for a swipe in pixels
+
+  function handleSwipe() {
+    const swipeDistance = touchendX - touchstartX;
+    
+    // Check if the swipe distance is greater than the threshold
+    if (Math.abs(swipeDistance) < swipeThreshold) {
+      return;
+    }
+
+    if (swipeDistance < 0) {
+      // Swiped left, go to the next page
+      const next = document.querySelector('.arrow.next');
+      if (next) window.location.href = next.href;
+    } else {
+      // Swiped right, go to the previous page
+      const prev = document.querySelector('.arrow.prev');
+      if (prev) window.location.href = prev.href;
+    }
+  }
+
+  document.addEventListener('touchstart', e => {
+    touchstartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  document.addEventListener('touchend', e => {
+    touchendX = e.changedTouches[0].screenX;
+    handleSwipe();
+  }, { passive: true });
+</script>
