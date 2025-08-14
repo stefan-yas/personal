@@ -1,0 +1,163 @@
+---
+// src/pages/wall.astro
+import SwipeLayout from '../components/SwipeLayout.astro';
+---
+<SwipeLayout title="The Wall" prevUrl="/about">
+  <main class="container" transition:animate="slide">
+    <h1>The Wall</h1>
+    <p>Leave a message for the world to see!</p>
+
+    <form id="wall-form">
+      <textarea id="message-input" placeholder="Say hi..." rows="4" required></textarea>
+      <button type="submit">Post</button>
+    </form>
+
+    <div id="wall-messages">
+      </div>
+  </main>
+</SwipeLayout>
+
+<style>
+  .container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+  #wall-form {
+    margin: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  textarea {
+    font-family: 'JetBrains Mono', monospace;
+    padding: 1em;
+    font-size: 0.98em;
+    border: 2px dashed rgba(226, 133, 184, 0.7);
+    width: 100%;
+    box-sizing: border-box;
+  }
+  textarea::placeholder {
+      color: #091B17;
+      opacity: 0.2;
+  }
+  button {
+    font-family: 'JetBrains Mono', monospace;
+    border: 0;
+    line-height: 2.5;
+    padding: 0 20px;
+    font-size: 1em;
+    text-align: center;
+    color: #194b3f;
+    border: 0.5rem outset rgba(217, 161, 192, .7);
+    border-radius: 10px;
+    width: 100%;
+    cursor: pointer;
+  }
+  button:active {
+    box-shadow: inset -2px -2px 3px rgba(255, 255, 255, .6),
+        inset 2px 2px 3px rgba(65, 62, 62, 0.6);
+    background-color: rgba(168, 127, 150, 0.7);
+    border: 0.5rem outset rgba(156, 114, 137, 0.7);
+  }
+  .message {
+    background-color: rgba(221, 255, 244, 0.7);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    text-align: left;
+    border-radius: 5px;
+  }
+  .message-time {
+    font-size: 0.8rem;
+    color: #594157;
+  }
+</style>
+
+<script>
+  // Define a type for our wall message objects
+  interface WallMessage {
+    text: string;
+    timestamp: string;
+  }
+
+  // Get references to DOM elements safely
+  const wallContainer = document.getElementById('wall-messages');
+  const wallForm = document.getElementById('wall-form');
+
+  // A helper function to safely escape HTML content
+  function escapeHTML(str: string): string {
+    const p = document.createElement('p');
+    p.appendChild(document.createTextNode(str));
+    return p.innerHTML;
+  }
+
+  async function fetchMessages() {
+    // Check if the wall container element exists before using it
+    if (!wallContainer) return;
+    
+    try {
+      const response = await fetch('/api/wall');
+      if (!response.ok) {
+        console.error('Failed to fetch messages');
+        wallContainer.innerHTML = '<p>Could not load messages.</p>';
+        return;
+      }
+      const messages: WallMessage[] = await response.json();
+      wallContainer.innerHTML = messages.map((msg) => `
+        <div class="message">
+          <p>${escapeHTML(msg.text)}</p>
+          <p class="message-time">${new Date(msg.timestamp).toLocaleString()}</p>
+        </div>
+      `).join('');
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+      wallContainer.innerHTML = '<p>Error loading messages.</p>';
+    }
+  }
+
+  // Check if the form exists before adding an event listener
+  if (wallForm) {
+    wallForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Safely get the form elements by casting them to their specific types
+      const messageInput = document.getElementById('message-input') as HTMLTextAreaElement | null;
+      const button = wallForm.querySelector('button');
+
+      // Check if the elements exist before proceeding
+      if (!messageInput || !button) return;
+
+      const message = messageInput.value;
+      if (!message.trim()) return;
+
+      button.disabled = true;
+
+      try {
+        const response = await fetch('/api/wall', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message }),
+        });
+
+        if (response.ok) {
+          messageInput.value = '';
+          await fetchMessages(); // Refresh the wall
+        } else {
+          alert('Failed to post message. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error posting message:', error);
+        alert('An error occurred. Please try again.');
+      } finally {
+        button.disabled = false;
+      }
+    });
+  }
+
+  // Load messages when the page first loads
+  document.addEventListener('astro:page-load', fetchMessages);
+</script>

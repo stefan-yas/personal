@@ -26,3 +26,23 @@ a {
   color: #2274a5;
   word-wrap: break-word;
 }
+
+p {
+  color: #194b3f;
+  background-color: rgba(221, 255, 244, 0.5);
+  padding: 10px;
+  margin: 15px;
+}
+
+main {
+  border: 3px dashed #4f8d7d;
+}
+
+a {
+  color: #2274a5;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}

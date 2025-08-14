@@ -18,14 +18,12 @@ const { title, prevUrl, nextUrl } = Astro.props;
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
-
-		{/* Favicon links etc. */}
+		
+		{/* Favicon links, fonts, etc. */}
 		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="shortcut icon" href="/favicon.ico">
-
-		{/* Scripts and Fonts */}
 		<script data-goatcounter="https://stefanyas.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -41,7 +39,7 @@ const { title, prevUrl, nextUrl } = Astro.props;
 	</body>
 </html>
 <script is:inline>
-  // --- KEYBOARD NAVIGATION ---
+  // --- DESKTOP KEYBOARD NAVIGATION ---
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') {
       const prev = document.querySelector('.arrow.prev');
@@ -52,36 +50,33 @@ const { title, prevUrl, nextUrl } = Astro.props;
     }
   });
 
-  // --- SWIPE NAVIGATION ---
-  let touchstartX = 0;
-  let touchendX = 0;
-  const swipeThreshold = 50; // Minimum distance for a swipe in pixels
+  // --- MOBILE SWIPE NAVIGATION ---
+  let touchstartY = 0;
+  let touchendY = 0;
+  const swipeThreshold = 100; // Minimum vertical distance for a swipe
 
   function handleSwipe() {
-    const swipeDistance = touchendX - touchstartX;
-    
-    // Check if the swipe distance is greater than the threshold
+    const swipeDistance = touchendY - touchstartY;
+
     if (Math.abs(swipeDistance) < swipeThreshold) {
       return;
     }
 
-    if (swipeDistance < 0) {
-      // Swiped left, go to the next page
+    if (swipeDistance < 0) { // Swiped up
       const next = document.querySelector('.arrow.next');
       if (next) window.location.href = next.href;
-    } else {
-      // Swiped right, go to the previous page
+    } else { // Swiped down
       const prev = document.querySelector('.arrow.prev');
       if (prev) window.location.href = prev.href;
     }
   }
 
   document.addEventListener('touchstart', e => {
-    touchstartX = e.changedTouches[0].screenX;
+    touchstartY = e.changedTouches[0].screenY;
   }, { passive: true });
 
   document.addEventListener('touchend', e => {
-    touchendX = e.changedTouches[0].screenX;
+    touchendY = e.changedTouches[0].screenY;
     handleSwipe();
   }, { passive: true });
 </script>
