@@ -7,22 +7,21 @@ interface Props {
 
 const { prevUrl, nextUrl } = Astro.props;
 ---
-
 <div class="nav-arrows">
-  {prevUrl ? (
+  {prevUrl && (
     <a href={prevUrl} class="arrow prev" aria-label="Previous Page">
       <i class="fas fa-chevron-left"></i>
     </a>
-  ) : <div />}
-
-  {nextUrl ? (
+  )}
+  {nextUrl && (
     <a href={nextUrl} class="arrow next" aria-label="Next Page">
       <i class="fas fa-chevron-right"></i>
     </a>
-  ) : <div />}
+  )}
 </div>
 
 <style>
+  /* Desktop-first styles (horizontal) */
   .nav-arrows {
     position: fixed;
     top: 50%;
@@ -39,17 +38,39 @@ const { prevUrl, nextUrl } = Astro.props;
     font-size: 2rem;
     padding: 1rem;
     text-decoration: none;
-    transition: transform 0.2s ease-in-out;
+    transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
   }
   .arrow:hover {
     transform: scale(1.2);
     color: #594157;
   }
-  /* The padding-right/left gives it some space from the edge */
   .prev {
     padding-left: 20px;
   }
   .next {
     padding-right: 20px;
+  }
+
+  /* Mobile styles (vertical) */
+  @media (max-width: 768px) {
+    .nav-arrows {
+      flex-direction: column;
+      justify-content: space-between;
+      top: 0;
+      left: 50%;
+      width: auto;
+      height: 100%;
+      transform: translateX(-50%);
+    }
+    .arrow {
+      padding: 20px 1rem;
+    }
+    /* Rotate icons to point up and down */
+    .prev i {
+      transform: rotate(90deg);
+    }
+    .next i {
+      transform: rotate(90deg);
+    }
   }
 </style>

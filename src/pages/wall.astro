@@ -21,10 +21,13 @@ import SwipeLayout from '../components/SwipeLayout.astro';
   .container {
     width: 100%;
     max-width: 500px;
-    margin: 0 auto;
+    margin: 2rem auto; /* Added margin for better spacing */
     padding: 0 20px;
     box-sizing: border-box;
     text-align: center;
+    /* ADDED these two lines */
+    max-height: 75vh; /* Limit the height */
+    overflow-y: auto; /* Make it scrollable */
   }
   #wall-form {
     margin: 2rem 0;

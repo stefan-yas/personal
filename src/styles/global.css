@@ -8,13 +8,13 @@ body {
 }
 
 body {
-  display: flex; /* Use flexbox for modern centering */
+  display: flex;
   flex-direction: column;
-  justify-content: center; /* Vertically centers content */
+  /* REMOVED justify-content: center; */
   align-items: center; /* Horizontally centers content */
-  min-height: 100vh; /* Ensures body takes full viewport height */
+  min-height: 100vh;
   padding: 20px;
-  box-sizing: border-box; /* Includes padding in the total width/height */
+  box-sizing: border-box;
   font-family: "JetBrains Mono", monospace;
   font-size: 20px;
   line-height: 1.8;

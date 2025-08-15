@@ -1,31 +1,14 @@
 import type { APIRoute } from "astro";
-import { promises as fs } from "fs";
-import path from "path";
+import { kv } from "@vercel/kv";
 
-// Path to a top-level `data` directory for persistent storage.
-const dataDir = path.resolve(process.cwd(), "data");
-const wallPath = path.join(dataDir, "wall.json");
-
-// This function ensures the data directory and wall.json file exist.
-async function ensureDataFile() {
-  try {
-    await fs.mkdir(dataDir, { recursive: true });
-    await fs.access(wallPath);
-  } catch (error) {
-    // If the file doesn't exist, create it with an empty array.
-    await fs.writeFile(wallPath, "[]", "utf-8");
-  }
+interface WallMessage {
+  text: string;
+  timestamp: string;
 }
 
-async function getMessages(): Promise<{ text: string; timestamp: string }[]> {
-  await ensureDataFile();
-  const fileContent = await fs.readFile(wallPath, "utf-8");
-  try {
-    return fileContent ? JSON.parse(fileContent) : [];
-  } catch (e) {
-    console.error("Error parsing wall.json, treating as empty.", e);
-    return [];
-  }
+// A helper to get messages from KV. Returns empty array if none exist.
+async function getMessages(): Promise<WallMessage[]> {
+  return (await kv.get("messages")) || [];
 }
 
 export const GET: APIRoute = async () => {
@@ -47,12 +30,15 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const messages = await getMessages();
+
     messages.unshift({
       text: message.trim(),
       timestamp: new Date().toISOString(),
     });
 
-    await fs.writeFile(wallPath, JSON.stringify(messages, null, 2), "utf-8");
+    // Save the updated array back to Vercel KV
+    await kv.set("messages", messages);
+
     return new Response(JSON.stringify({ success: true }), { status: 201 });
   } catch (error) {
     console.error("POST Error:", error);
