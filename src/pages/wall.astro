@@ -78,63 +78,59 @@ import SwipeLayout from '../components/SwipeLayout.astro';
 </style>
 
 <script>
-  // Define a type for our wall message objects
   interface WallMessage {
     text: string;
     timestamp: string;
   }
 
-  // Get references to DOM elements safely
-  const wallContainer = document.getElementById('wall-messages');
-  const wallForm = document.getElementById('wall-form');
+  const wallContainer = document.getElementById('wall-messages') as HTMLDivElement | null;
+  const wallForm = document.getElementById('wall-form') as HTMLFormElement | null;
 
-  // A helper function to safely escape HTML content
   function escapeHTML(str: string): string {
     const p = document.createElement('p');
-    p.appendChild(document.createTextNode(str));
+    p.textContent = str;
     return p.innerHTML;
   }
 
   async function fetchMessages() {
-    // Check if the wall container element exists before using it
     if (!wallContainer) return;
-    
     try {
       const response = await fetch('/api/wall');
       if (!response.ok) {
-        console.error('Failed to fetch messages');
-        wallContainer.innerHTML = '<p>Could not load messages.</p>';
-        return;
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const messages: WallMessage[] = await response.json();
-      wallContainer.innerHTML = messages.map((msg) => `
-        <div class="message">
-          <p>${escapeHTML(msg.text)}</p>
-          <p class="message-time">${new Date(msg.timestamp).toLocaleString()}</p>
-        </div>
-      `).join('');
+
+      if (messages.length === 0) {
+        wallContainer.innerHTML = '<p>No messages yet. Be the first to post!</p>';
+      } else {
+        wallContainer.innerHTML = messages.map(msg => `
+          <div class="message">
+            <p>${escapeHTML(msg.text)}</p>
+            <p class="message-time">${new Date(msg.timestamp).toLocaleString()}</p>
+          </div>
+        `).join('');
+      }
     } catch (error) {
       console.error('Error fetching messages:', error);
-      wallContainer.innerHTML = '<p>Error loading messages.</p>';
+      wallContainer.innerHTML = '<p>Error loading messages. Please try again later.</p>';
     }
   }
 
-  // Check if the form exists before adding an event listener
   if (wallForm) {
-    wallForm.addEventListener('submit', async (e) => {
+    wallForm.addEventListener('submit', async (e: Event) => {
       e.preventDefault();
 
-      // Safely get the form elements by casting them to their specific types
       const messageInput = document.getElementById('message-input') as HTMLTextAreaElement | null;
-      const button = wallForm.querySelector('button');
+      const button = wallForm.querySelector('button') as HTMLButtonElement | null;
 
-      // Check if the elements exist before proceeding
       if (!messageInput || !button) return;
 
-      const message = messageInput.value;
-      if (!message.trim()) return;
+      const message = messageInput.value.trim();
+      if (!message) return;
 
       button.disabled = true;
+      button.textContent = 'Posting...';
 
       try {
         const response = await fetch('/api/wall', {
@@ -145,19 +141,21 @@ import SwipeLayout from '../components/SwipeLayout.astro';
 
         if (response.ok) {
           messageInput.value = '';
-          await fetchMessages(); // Refresh the wall
+          await fetchMessages();
         } else {
-          alert('Failed to post message. Please try again.');
+          const errorData = await response.json();
+          alert(`Failed to post message: ${errorData.error || 'Unknown error'}`);
         }
       } catch (error) {
         console.error('Error posting message:', error);
-        alert('An error occurred. Please try again.');
+        alert('An error occurred while posting. Please check the console and try again.');
       } finally {
         button.disabled = false;
+        button.textContent = 'Post';
       }
     });
   }
 
-  // Load messages when the page first loads
+  // Use astro:page-load for initial load and subsequent client-side navigations
   document.addEventListener('astro:page-load', fetchMessages);
 </script>
