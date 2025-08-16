@@ -1,0 +1,64 @@
+---
+// src/components/EasterEgg.astro
+const targetUrl = "https://plunkplunkplunk.xyz/"; // You can change this URL
+---
+
+<img id="easter-egg" class="fluffy-circle" src="/ellipse.svg" alt="A fluffy ellipse." />
+
+<style>
+  .fluffy-circle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 3em;
+    opacity: 80%;
+    cursor: pointer;
+    z-index: 102;
+    border: 2px solid #194b3f; /* Added border */
+    border-radius: 50%; /* Make the border circular */
+    box-sizing: border-box; /* Ensure border is included in the element's total size */
+  }
+
+  .fluffy-circle:hover {
+    transition: transform 330ms ease-in-out;
+    transform: scale(1.07);
+  }
+
+  .fluffy-circle.clicked {
+    transition: transform 50ms ease-in-out;
+    transform: scale(1.3);
+    opacity: 99%;
+    animation: pulse 0.5s ease-in-out;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.3);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  /* --- MOBILE STYLES --- */
+  @media (max-width: 600px) {
+    .fluffy-circle {
+      top: 20px;
+      left: 20px;
+      bottom: auto;
+      right: auto;
+    }
+  }
+</style>
+
+<script define:vars={{ targetUrl }}>
+  document.getElementById('easter-egg').addEventListener('click', function() {
+    this.classList.add('clicked');
+    setTimeout(() => {
+      window.location.href = targetUrl;
+    }, 500); // Wait for the animation to finish before redirecting
+  });
+</script>

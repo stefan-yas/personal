@@ -2,6 +2,7 @@
 // src/components/SwipeLayout.astro
 import NavArrows from './NavArrows.astro';
 import PageIndicator from './PageIndicator.astro';
+import EasterEgg from './EasterEgg.astro'; // Import the new component
 import '../styles/global.css';
 
 interface Props {
@@ -31,10 +32,12 @@ const { title, prevUrl, nextUrl, totalPages, currentPage } = Astro.props;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..800&display=swap" rel="stylesheet">
   </head>
+ 
   <body>
     <NavArrows prevUrl={prevUrl} nextUrl={nextUrl} />
     <slot />
     <PageIndicator totalPages={totalPages} currentPage={currentPage} />
+    <EasterEgg /> 
     <script is:inline>
       // --- KEYBOARD NAVIGATION ---
       document.addEventListener('keydown', (e) => {
@@ -56,13 +59,13 @@ const { title, prevUrl, nextUrl, totalPages, currentPage } = Astro.props;
           }
         }
       });
-
       // --- SWIPE NAVIGATION ---
       let touchstartX = 0;
       let touchendX = 0;
       let touchstartY = 0;
       let touchendY = 0;
-      const swipeThreshold = 50; // Minimum distance for a swipe in pixels
+      const swipeThreshold = 50;
+      // Minimum distance for a swipe in pixels
 
       function handleSwipe() {
         if (window.innerWidth <= 600) {
@@ -105,7 +108,6 @@ const { title, prevUrl, nextUrl, totalPages, currentPage } = Astro.props;
         touchendY = e.changedTouches[0].screenY;
         handleSwipe();
       }, { passive: true });
-
       // --- MOUSE WHEEL NAVIGATION (Desktop) ---
       let isThrottled = false;
       document.addEventListener('wheel', (e) => {
@@ -116,6 +118,7 @@ const { title, prevUrl, nextUrl, totalPages, currentPage } = Astro.props;
           if (e.deltaY > 0) {
             // Scrolled down
             const next = document.querySelector('.arrow.next');
+        
             if (next) window.location.href = next.href;
           } else {
             // Scrolled up
