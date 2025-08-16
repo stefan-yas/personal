@@ -2,10 +2,10 @@
 // src/pages/about.astro
 import SwipeLayout from '../components/SwipeLayout.astro';
 ---
-<SwipeLayout title="About Me" prevUrl="/" nextUrl="/">
+<SwipeLayout title="About Me" prevUrl="/" nextUrl="/" totalPages={2} currentPage={2}>
   <main class="container" transition:animate="slide">
     <h1>About Me</h1>
-    <p>I am a tech generalist.<br><br>Currently looking for a job. If you have one, <a href="/">here's my resume</a>.</p>
+    <p>I am a tech generalist.<br><br>Currently looking for a job. If you have one, <a href="/resume.pdf" target="_blank" rel="noopener">here's my resume</a>.</p>
   </main>
 </SwipeLayout>
 
@@ -24,5 +24,5 @@ import SwipeLayout from '../components/SwipeLayout.astro';
     background-color: rgba(221, 255, 244, 0.5);
     padding: 10px;
     margin: 15px;
-}
+  }
 </style>

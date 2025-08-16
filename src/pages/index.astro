@@ -1,4 +1,5 @@
 ---
+// src/pages/index.astro
 import SwipeLayout from '../components/SwipeLayout.astro';
 import Header from '../components/Header.astro';
 import LinkList from '../components/LinkList.astro';
@@ -32,7 +33,7 @@ const socialLinks = [
   }
 ];
 ---
-<SwipeLayout title={pageTitle} nextUrl="/about">
+<SwipeLayout title={pageTitle} nextUrl="/about" totalPages={2} currentPage={1}>
     <main class="container" transition:animate="slide">
         <Header title={pageTitle} />
         <LinkList links={socialLinks} />

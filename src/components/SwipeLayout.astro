@@ -1,14 +1,18 @@
 ---
+// src/components/SwipeLayout.astro
 import NavArrows from './NavArrows.astro';
+import PageIndicator from './PageIndicator.astro';
 import '../styles/global.css';
 
 interface Props {
   title: string;
   prevUrl?: string;
   nextUrl?: string;
+  totalPages: number;
+  currentPage: number;
 }
 
-const { title, prevUrl, nextUrl } = Astro.props;
+const { title, prevUrl, nextUrl, totalPages, currentPage } = Astro.props;
 ---
 <html lang="en">
   <head>
@@ -30,6 +34,7 @@ const { title, prevUrl, nextUrl } = Astro.props;
   <body>
     <NavArrows prevUrl={prevUrl} nextUrl={nextUrl} />
     <slot />
+    <PageIndicator totalPages={totalPages} currentPage={currentPage} />
     <script is:inline>
       // --- KEYBOARD NAVIGATION ---
       document.addEventListener('keydown', (e) => {
