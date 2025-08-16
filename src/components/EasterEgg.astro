@@ -6,17 +6,42 @@ const targetUrl = "https://plunkplunkplunk.xyz/"; // You can change this URL
 <img id="easter-egg" class="fluffy-circle" src="/ellipse.svg" alt="A fluffy ellipse." />
 
 <style>
+  @keyframes slideInFromRight {
+    from {
+      transform: translateX(150%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 0.8;
+    }
+  }
+
+  @keyframes slideInFromTop {
+    from {
+      transform: translateY(-150%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 0.8;
+    }
+  }
+
   .fluffy-circle {
     position: fixed;
     bottom: 20px;
     right: 20px;
     width: 3em;
-    opacity: 80%;
     cursor: pointer;
     z-index: 102;
-    border: 2px solid #194b3f; /* Added border */
-    border-radius: 50%; /* Make the border circular */
-    box-sizing: border-box; /* Ensure border is included in the element's total size */
+    border: 2px solid #194b3f;
+    border-radius: 50%;
+    box-sizing: border-box;
+
+    /* --- Animation for delayed slide-in --- */
+    opacity: 0; /* Start hidden */
+    animation: slideInFromRight 0.5s ease-out 2s forwards;
   }
 
   .fluffy-circle:hover {
@@ -50,6 +75,7 @@ const targetUrl = "https://plunkplunkplunk.xyz/"; // You can change this URL
       left: 20px;
       bottom: auto;
       right: auto;
+      animation-name: slideInFromTop; /* Change animation for mobile */
     }
   }
 </style>
