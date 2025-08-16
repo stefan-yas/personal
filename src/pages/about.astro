@@ -2,10 +2,10 @@
 // src/pages/about.astro
 import SwipeLayout from '../components/SwipeLayout.astro';
 ---
-<SwipeLayout title="About Me" prevUrl="/" nextUrl="/contact">
+<SwipeLayout title="About Me" prevUrl="/" nextUrl="/">
   <main class="container" transition:animate="slide">
     <h1>About Me</h1>
-    <p>This is a placeholder page for the about section.</p>
+    <p>I am a tech generalist.<br><br>Currently looking for a job. If you have one, <a href="/">here's my resume</a>.</p>
   </main>
 </SwipeLayout>
 
@@ -18,4 +18,11 @@ import SwipeLayout from '../components/SwipeLayout.astro';
     box-sizing: border-box;
     text-align: center;
   }
+
+  p {
+    color: #194b3f;
+    background-color: rgba(221, 255, 244, 0.5);
+    padding: 10px;
+    margin: 15px;
+}
 </style>

@@ -26,3 +26,8 @@ a {
   color: #2274a5;
   word-wrap: break-word;
 }
+
+main {
+  margin-bottom: 2em;
+  border: 3px dashed #4f8d7d;
+}

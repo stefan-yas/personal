@@ -1,0 +1,39 @@
+---
+interface Props {
+    totalPages: number;
+    currentPage: number;
+}
+const { totalPages, currentPage } = Astro.props;
+---
+
+<div class="page-indicator">
+  {Array.from({ length: totalPages }).map((_, i) => (
+    <span class={`dot ${i + 1 === currentPage ? 'active' : ''}`}></span>
+  ))}
+</div>
+
+<style>
+  .page-indicator {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    background-color: rgba(217, 161, 192, 0.7);
+    padding: 8px 15px;
+    border-radius: 20px;
+    z-index: 101;
+  }
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #594157;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+  }
+  .dot.active {
+    opacity: 1;
+  }
+</style>
