@@ -2,7 +2,6 @@
 // src/components/SwipeLayout.astro
 import NavArrows from './NavArrows.astro';
 import PageIndicator from './PageIndicator.astro';
-import EasterEgg from './EasterEgg.astro'; // Import the new component
 import '../styles/global.css';
 
 interface Props {
@@ -32,12 +31,10 @@ const { title, prevUrl, nextUrl, totalPages, currentPage } = Astro.props;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..800&display=swap" rel="stylesheet">
   </head>
- 
   <body>
     <NavArrows prevUrl={prevUrl} nextUrl={nextUrl} />
     <slot />
     <PageIndicator totalPages={totalPages} currentPage={currentPage} />
-    <EasterEgg /> 
     <script is:inline>
       // --- KEYBOARD NAVIGATION ---
       document.addEventListener('keydown', (e) => {
@@ -59,40 +56,32 @@ const { title, prevUrl, nextUrl, totalPages, currentPage } = Astro.props;
           }
         }
       });
-      // --- SWIPE NAVIGATION ---
+
+      // --- SWIPE NAVIGATION & PULL-TO-REFRESH PREVENTION ---
       let touchstartX = 0;
       let touchendX = 0;
       let touchstartY = 0;
       let touchendY = 0;
       const swipeThreshold = 50;
-      // Minimum distance for a swipe in pixels
 
       function handleSwipe() {
         if (window.innerWidth <= 600) {
           const swipeDistance = touchendY - touchstartY;
-          if (Math.abs(swipeDistance) < swipeThreshold) {
-            return;
-          }
-          if (swipeDistance < 0) {
-            // Swiped up, go to the next page
+          if (Math.abs(swipeDistance) < swipeThreshold) return;
+          if (swipeDistance < 0) { // Swiped up
             const next = document.querySelector('.arrow.next');
             if (next) window.location.href = next.href;
-          } else {
-            // Swiped down, go to the previous page
+          } else { // Swiped down
             const prev = document.querySelector('.arrow.prev');
             if (prev) window.location.href = prev.href;
           }
         } else {
           const swipeDistance = touchendX - touchstartX;
-          if (Math.abs(swipeDistance) < swipeThreshold) {
-            return;
-          }
-          if (swipeDistance < 0) {
-            // Swiped left, go to the next page
+          if (Math.abs(swipeDistance) < swipeThreshold) return;
+          if (swipeDistance < 0) { // Swiped left
             const next = document.querySelector('.arrow.next');
             if (next) window.location.href = next.href;
-          } else {
-            // Swiped right, go to the previous page
+          } else { // Swiped right
             const prev = document.querySelector('.arrow.prev');
             if (prev) window.location.href = prev.href;
           }
@@ -102,26 +91,35 @@ const { title, prevUrl, nextUrl, totalPages, currentPage } = Astro.props;
       document.addEventListener('touchstart', e => {
         touchstartX = e.changedTouches[0].screenX;
         touchstartY = e.changedTouches[0].screenY;
-      }, { passive: true });
+      }, { passive: false }); // `passive: false` is needed to allow preventDefault()
+
+      document.addEventListener('touchmove', e => {
+        if (window.innerWidth <= 600) {
+            const currentY = e.changedTouches[0].screenY;
+            // If at the top of the page and swiping down, prevent refresh
+            if (window.scrollY === 0 && currentY > touchstartY) {
+                e.preventDefault();
+            }
+        }
+      }, { passive: false }); // `passive: false` is needed to allow preventDefault()
+
       document.addEventListener('touchend', e => {
         touchendX = e.changedTouches[0].screenX;
         touchendY = e.changedTouches[0].screenY;
         handleSwipe();
       }, { passive: true });
+
       // --- MOUSE WHEEL NAVIGATION (Desktop) ---
       let isThrottled = false;
       document.addEventListener('wheel', (e) => {
         if (window.innerWidth > 600 && !isThrottled) {
           isThrottled = true;
-          setTimeout(() => { isThrottled = false; }, 1000); // 1-second cooldown
+          setTimeout(() => { isThrottled = false; }, 1000);
 
-          if (e.deltaY > 0) {
-            // Scrolled down
+          if (e.deltaY > 0) { // Scrolled down
             const next = document.querySelector('.arrow.next');
-        
             if (next) window.location.href = next.href;
-          } else {
-            // Scrolled up
+          } else { // Scrolled up
             const prev = document.querySelector('.arrow.prev');
             if (prev) window.location.href = prev.href;
           }
