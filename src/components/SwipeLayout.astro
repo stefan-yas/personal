@@ -38,42 +38,70 @@ const { title, prevUrl, nextUrl, totalPages, currentPage } = Astro.props;
     <script is:inline>
       // --- KEYBOARD NAVIGATION ---
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft') {
-          const prev = document.querySelector('.arrow.prev');
-          if (prev) window.location.href = prev.href;
-        } else if (e.key === 'ArrowRight') {
-          const next = document.querySelector('.arrow.next');
-          if (next) window.location.href = next.href;
+        if (window.innerWidth <= 600) {
+          if (e.key === 'ArrowUp') {
+            const prev = document.querySelector('.arrow.prev');
+            if (prev) window.location.href = prev.href;
+          } else if (e.key === 'ArrowDown') {
+            const next = document.querySelector('.arrow.next');
+            if (next) window.location.href = next.href;
+          }
+        } else {
+          if (e.key === 'ArrowLeft') {
+            const prev = document.querySelector('.arrow.prev');
+            if (prev) window.location.href = prev.href;
+          } else if (e.key === 'ArrowRight') {
+            const next = document.querySelector('.arrow.next');
+            if (next) window.location.href = next.href;
+          }
         }
       });
-
       // --- SWIPE NAVIGATION ---
       let touchstartX = 0;
       let touchendX = 0;
+      let touchstartY = 0;
+      let touchendY = 0;
       const swipeThreshold = 50; // Minimum distance for a swipe in pixels
 
       function handleSwipe() {
-        const swipeDistance = touchendX - touchstartX;
-        if (Math.abs(swipeDistance) < swipeThreshold) {
-          return;
-        }
-        if (swipeDistance < 0) {
-          // Swiped left, go to the next page
-          const next = document.querySelector('.arrow.next');
-          if (next) window.location.href = next.href;
+        if (window.innerWidth <= 600) {
+          const swipeDistance = touchendY - touchstartY;
+          if (Math.abs(swipeDistance) < swipeThreshold) {
+            return;
+          }
+          if (swipeDistance < 0) {
+            // Swiped up, go to the next page
+            const next = document.querySelector('.arrow.next');
+            if (next) window.location.href = next.href;
+          } else {
+            // Swiped down, go to the previous page
+            const prev = document.querySelector('.arrow.prev');
+            if (prev) window.location.href = prev.href;
+          }
         } else {
-          // Swiped right, go to the previous page
-          const prev = document.querySelector('.arrow.prev');
-          if (prev) window.location.href = prev.href;
+          const swipeDistance = touchendX - touchstartX;
+          if (Math.abs(swipeDistance) < swipeThreshold) {
+            return;
+          }
+          if (swipeDistance < 0) {
+            // Swiped left, go to the next page
+            const next = document.querySelector('.arrow.next');
+            if (next) window.location.href = next.href;
+          } else {
+            // Swiped right, go to the previous page
+            const prev = document.querySelector('.arrow.prev');
+            if (prev) window.location.href = prev.href;
+          }
         }
       }
 
       document.addEventListener('touchstart', e => {
         touchstartX = e.changedTouches[0].screenX;
+        touchstartY = e.changedTouches[0].screenY;
       }, { passive: true });
-
       document.addEventListener('touchend', e => {
         touchendX = e.changedTouches[0].screenX;
+        touchendY = e.changedTouches[0].screenY;
         handleSwipe();
       }, { passive: true });
     </script>

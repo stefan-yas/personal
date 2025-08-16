@@ -15,7 +15,8 @@ const { prevUrl, nextUrl } = Astro.props;
     </a>
   ) : <div />}
 
-  {nextUrl ? (
+  {nextUrl ?
+  (
     <a href={nextUrl} class="arrow next" aria-label="Next Page">
       <i class="fas fa-chevron-right"></i>
     </a>
@@ -45,11 +46,40 @@ const { prevUrl, nextUrl } = Astro.props;
     transform: scale(1.2);
     color: #594157;
   }
-  /* The padding-right/left gives it some space from the edge */
+
+  /* --- DESKTOP STYLES (Default) --- */
   .prev {
     padding-left: 20px;
   }
   .next {
     padding-right: 20px;
+  }
+
+  /* --- MOBILE STYLES --- */
+  @media (max-width: 600px) {
+    .nav-arrows {
+      flex-direction: column;
+      right: 0;
+      top: 0;
+      width: auto;
+      height: 100%;
+      left: auto;
+      justify-content: space-between;
+      transform: none;
+    }
+    .prev {
+      padding: 20px 20px 0 0;
+    }
+    .next {
+      padding: 0 20px 20px 0;
+    }
+
+    /* Override Font Awesome icons for mobile */
+    .arrow.prev > i.fa-chevron-left::before {
+      content: "\f077" !important; /* Up arrow */
+    }
+    .arrow.next > i.fa-chevron-right::before {
+      content: "\f078" !important; /* Down arrow */
+    }
   }
 </style>
