@@ -56,6 +56,7 @@ const { title, prevUrl, nextUrl, totalPages, currentPage } = Astro.props;
           }
         }
       });
+
       // --- SWIPE NAVIGATION ---
       let touchstartX = 0;
       let touchendX = 0;
@@ -103,6 +104,25 @@ const { title, prevUrl, nextUrl, totalPages, currentPage } = Astro.props;
         touchendX = e.changedTouches[0].screenX;
         touchendY = e.changedTouches[0].screenY;
         handleSwipe();
+      }, { passive: true });
+
+      // --- MOUSE WHEEL NAVIGATION (Desktop) ---
+      let isThrottled = false;
+      document.addEventListener('wheel', (e) => {
+        if (window.innerWidth > 600 && !isThrottled) {
+          isThrottled = true;
+          setTimeout(() => { isThrottled = false; }, 1000); // 1-second cooldown
+
+          if (e.deltaY > 0) {
+            // Scrolled down
+            const next = document.querySelector('.arrow.next');
+            if (next) window.location.href = next.href;
+          } else {
+            // Scrolled up
+            const prev = document.querySelector('.arrow.prev');
+            if (prev) window.location.href = prev.href;
+          }
+        }
       }, { passive: true });
     </script>
   </body>
